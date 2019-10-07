@@ -11,11 +11,10 @@ class Room:
     def parse_seat(self, row, col):
         '''Method parse passed row and col into ints and validate it'''
         try:
-            int_row = parse_str_to_int(row)
-            if int_row <= 0 or int_row > self.size[0]:
+            int_row, int_col= parse_str_to_int(row), parse_str_to_int(col)
+            if int_row not in range(1, self.size[0]+1):
                 raise Exception(f'Row {int_row} is not in range 1-{self.size[0]}')
-            int_col = parse_str_to_int(col)
-            if int_col <= 0 or int_col > self.size[1]:
+            if int_col not in range(1, self.size[1]+1):
                 raise Exception(f'Place {int_col} is not in range 1-{self.size[1]}')
         except ValueError as e:
             raise Exception(f'Unappropiate types of co-ordinates.Both need to be int:\n{e}')

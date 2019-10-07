@@ -4,13 +4,13 @@ import shutil
 class Movie_database:
     ''' Class for storage movies available in single cinema'''
     def __init__(self, cinema):
-        self.movie_database = os.path.join(os.getcwd(), 'data', f'{cinema}_movies.txt')
+        self.movie_database = os.path.join(os.getcwd(), 'data', f'{cinema}_movies.txt') #reference to cinema movie txt file
         self.create_movie_database()
         self.read_movies_from_disk()
 
     # TODO add try except
     def create_movie_database(self):
-        '''Method create cinema_movie_database from list of movie in .txt file'''
+        '''Method copy list of movie from one txt file to another'''
         source_database = os.path.join(os.getcwd(), 'data', 'movies.txt')
         shutil.copy(source_database, self.movie_database)
 
