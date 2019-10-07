@@ -7,10 +7,15 @@ def parse_str_to_int(string):
 
 
 def ticket_printer(cinema, title, time, room, client, row, col):
+    '''Method create and print ticket for client'''
     info = f'Cinema: {cinema} Title: {title} Time: {time} Room: {room} Cilent:{client} Row: {row} Place: {col}'
     frame = f'+{"-" * (len(info) + 2)}+'
     text = f'| {info} |'
     list_of_lines = [frame, frame, frame, text, frame, frame, frame]
     output = '\n'.join(list_of_lines)
     print(f'Here is your ticket:')
-    print(f'\n{output}')
+    print(f'\n{output}\n')
+
+# TODO Create one method to exit or go back in all user_iterface method
+def exit_go_back():
+    pass
