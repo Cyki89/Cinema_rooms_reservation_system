@@ -7,6 +7,7 @@ def parse_str_to_int(string):
 
 
 def ticket_printer(cinema, title, time, room, client, row, col):
+    '''Method create and print ticket for client'''
     info = f'Cinema: {cinema} Title: {title} Time: {time} Room: {room} Cilent:{client} Row: {row} Place: {col}'
     frame = f'+{"-" * (len(info) + 2)}+'
     text = f'| {info} |'

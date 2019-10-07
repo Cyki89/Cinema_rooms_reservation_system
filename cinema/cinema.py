@@ -10,31 +10,38 @@ class Cinema:
     '''Main class for single cinema'''
     def __init__(self, name):
         self.name = name
-        self.movie_database = Movie_database(name)
-        self.showing_time = ['15:00', '18:00', '21:00']
+        self.movie_database = Movie_database(name) # reference to cinema movie database
+        # TODO
+        self.showing_time = ['15:00', '18:00', '21:00'] # field use to generate random movie
         self.list_of_rooms = []
         self.list_of_movies = [None]
 
-    # TODO
     def add_room(self, name, size):
+        '''Method added new room to cinema'''
         try:
-            new_room = Room(name, size) ## How to delete this object when don't pass validate method
+            int_row, int_col = parse_str_to_int(size[0]), parse_str_to_int(size[0])
+            if int_row <= 0 or int_col <= 0:
+                raise Exception(f'Both dimentions have to be grater than 0.\nRows: {int_row} Cols: {int_col}.')
         except Exception as e:
-            raise Exception(e)
+            print(f'Unsuccessfully added a new room {name} with size: {size} to {self.name} cinema. Details:\n{e}')
         else:
-            print(f'Successfully added a new room {name} with {size} to {self.name} cinema :')
-            self.list_of_rooms.append(new_room)
+            self.list_of_rooms.append(Room(name, (int_row, int_col)))
+            print(f'Successfully added a new room {name} with size: {size} to {self.name} cinema')
+
 
     def add_movie(self, name, time, room):
+        '''Method added new movie to cinema'''
         self.list_of_movies.append(Movie(self, name, time, room))
 
     def movie_generator(self):
+        '''Helper method to generate random movie in cinema'''
         for time in self.showing_time:
             for room in self.list_of_rooms:
                 movie_name = random.choice(self.movie_database.list_of_movies)
                 self.list_of_movies.append(Movie(self, movie_name, room, time))
 
     def allocation_seat_generator(self):
+        '''Helper method to generate random clients and allocate theirs in cinema rooms'''
         for movie in self.list_of_movies:
             if movie is not None:
                 for i in range (1,80):
@@ -47,6 +54,7 @@ class Cinema:
                         print(e)
 
     def show_main_menu(self):
+        ''' Method shows main menu in terminal'''
         os.system('clear')
         print(f'Welceome to {self.name} Cinema')
         self.show_schedule()
@@ -71,6 +79,7 @@ class Cinema:
             self.show_main_menu()
 
     def show_schedule(self):
+        '''Method shows daily movies schedule'''
         print('Today schedule:')
         print('-' * 50)
         for i, movie in enumerate(self.list_of_movies[1:], 1):
@@ -78,6 +87,7 @@ class Cinema:
         print('-' * 50)
 
     def select_movie(self, movie_id):
+        '''Method select appropiate movie from passed movie_id'''
         try:
             int_movie_id = parse_str_to_int(movie_id)
         except ValueError as e:

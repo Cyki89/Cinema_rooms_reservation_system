@@ -7,11 +7,13 @@ class Movie:
     def __init__(self, cinema, name, room, time):
         self.cinema = cinema
         self.name = name
-        self.room = room.__copy__()
+        self.room = room.__copy__() # to enable run several cinema movie in one room
         self.time = time
-        self.list_of_action = [None, 'make_reservation', 'change_reservation', 'refuse_reservation']
+        # TODO
+        self.list_of_action = [None, 'make_reservation', 'change_reservation', 'refuse_reservation'] # field use to select method using exec()
 
     def show_menu(self):
+        '''Method show seating plan for movie'''
         os.system('clear')
         print(f'Seating plan for Movie "{self.name}" at Room {self.room.name} at {self.time}')
         self.room.show_seating()
@@ -36,6 +38,7 @@ class Movie:
             self.show_menu()
 
     def select_action(self, user_input):
+        '''Method redirects to other class method'''
         try:
             int_user_input = parse_str_to_int(user_input)
         except ValueError as e:
@@ -46,6 +49,7 @@ class Movie:
             raise Exception(f'Action number {int_user_input} not found...')
 
     def make_reservation(self):
+        '''Method redirects to room.allocate_seat method'''
         print('Enter a full name to make reservation, press "x" to exit or press "b" go back')
         user_name = input()
         if user_name.upper() == 'X':
@@ -68,6 +72,7 @@ class Movie:
             self.show_menu()
 
     def refuse_reservation(self):
+        '''Method redirects to room.release_seat method'''
         print('Enter "x" to exit, press "b" to go back or press any other key to continue...')
         response = input()
         if response.upper() == 'X':
@@ -89,6 +94,7 @@ class Movie:
             self.show_menu()
 
     def change_reservation(self):
+        '''Method redirects to room.relocate_seat method'''
         print('Enter "x" to exit, press "b" to go back or press any other key to continue...')
         response = input()
         if response.upper() == 'X':
