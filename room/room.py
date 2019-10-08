@@ -44,7 +44,7 @@ class Room:
                 raise Exception(f'Seat {int_to_row},{int_to_col} already occupied!!!')
             self.__seating[int_to_row][int_to_col] = self.__seating[int_from_row][int_from_col]
             self.__seating[int_from_row][int_from_col] = int_from_col
-            print(f'Relocation place successfull for place {int_from_row},{int_from_col} to {int_to_row},{int_to_col}')
+            print(f'Relocation successfull from place {int_from_row},{int_from_col} to {int_to_row},{int_to_col}')
         except Exception as e:
             raise Exception(f'Occur some problem during relocation:\n{e}')
 

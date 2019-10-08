@@ -7,7 +7,6 @@ class Movie:
         self.cinema = cinema
         self.name = name
         self.room = room.__copy__() # to enable run several cinema movie in one room
-        # TODO add time validation
         self.time = time
         self.list_of_action = [None, 'make_reservation', 'change_reservation', 'refuse_reservation']  # variable use to select method using exec()
 

@@ -16,6 +16,21 @@ def ticket_printer(cinema, title, time, room, client, row, col):
     print(f'Here is your ticket:')
     print(f'\n{output}\n')
 
-# TODO Create one method to exit or go back in all user_iterface method
-def exit_go_back():
-    pass
+
+def try_except_decorator(func):
+    '''Method adding try/except block to function'''
+    # print(f'Adding try_except_decorator to {func.__name__}')
+    def wrapper(*args, **kwargs):
+        try:
+            func(*args, **kwargs)
+        except Exception as e:
+            raise Exception(e)
+    return wrapper
+
+
+def error_handling_class_decorator(cls):
+    '''Method use to add error handling do class method'''
+    for k, v in vars(cls).items():
+        if callable(v) and v.__name__ is not '__init__':
+            setattr(cls, k, try_except_decorator(v))
+    return cls
