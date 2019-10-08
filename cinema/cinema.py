@@ -1,6 +1,4 @@
 import random
-import os
-import time
 from movie_database import Movie_database
 from room import Room
 from movie import Movie
@@ -13,6 +11,7 @@ class Cinema:
         self.movie_database = Movie_database(name) # reference to cinema movie database
         self.list_of_rooms = []
         self.list_of_movies = [None]
+        self.showing_time = ['15:00', '18:00', '21:00']
 
     def add_room(self, name, size):
         '''Method added new room to cinema'''
@@ -26,15 +25,17 @@ class Cinema:
             self.list_of_rooms.append(Room(name, (int_row, int_col)))
             print(f'Successfully added a new room {name} with size: {size} to {self.name} cinema')
 
-
     def add_movie(self, name, time, room):
         '''Method added new movie to cinema'''
-        self.list_of_movies.append(Movie(self, name, time, room))
+        if name in self.movie_database.list_of_movies and time in self.showing_time and room in self.list_of_rooms:
+            self.list_of_movies.append(Movie(self, name, time, room))
+        else:
+            print(f'Movie {name} {room} {time} cannot be added to Cinema {self.name}')
+            print('It dosent meet the cinema requirements')
 
     def movie_generator(self):
         '''Helper method to generate random movie in cinema'''
-        showing_time = ['15:00', '18:00', '21:00']
-        for time in showing_time:
+        for time in self.showing_time:
             for room in self.list_of_rooms:
                 movie_name = random.choice(self.movie_database.list_of_movies)
                 self.list_of_movies.append(Movie(self, movie_name, room, time))
@@ -50,32 +51,6 @@ class Cinema:
                         movie.room.allocate_seat(client_name, row, col)
                     except Exception as e:
                         print(e)
-
-    # def show_main_menu(self):
-    #     ''' Method shows main menu in terminal'''
-    #     os.system('clear')
-    #     print(f'Welceome to {self.name} Cinema')
-    #     self.show_schedule()
-    #     print("My name is", inspect.stack())
-    #     print('Select a Movie Id to go further or press x to exit')
-    #     user_input = input()
-    #     if user_input.upper() == 'X':
-    #         exit()
-    #     try:
-    #         selected_movie = self.select_movie(user_input)
-    #         selected_movie.show_menu()
-    #     except Exception as e:
-    #         os.system('clear')
-    #         print('Something go wrong ... ')
-    #         print(f'Details: {e}')
-    #         print('Back to Main Menu')
-    #         time.sleep(3)
-    #         self.show_main_menu()
-    #     else:
-    #         print('Back to Main Menu')
-    #         time.sleep(3)
-    #         os.system('clear')
-    #         self.show_main_menu()
 
     def show_schedule(self):
         '''Method shows daily movies schedule'''
