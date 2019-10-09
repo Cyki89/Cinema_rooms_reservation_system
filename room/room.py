@@ -62,7 +62,8 @@ class Room:
 
     def show_seating(self):
         '''Method show room seat in readable format'''
-        print_seating = [['{0:2s}'.format(str(col)) if isinstance(col, int) else '{0:2s}'.format('X') for col in row[1:]] for row in self.__seating if row is not None]
+        print_seating = [['{0:2s}'.format(str(col)) if isinstance(col, int) else '{0:2s}'.format('X')
+                          for col in row[1:]] for row in self.__seating if row is not None]
         for i, row in enumerate(print_seating, 1):
             print('{}\t|  {}  |'.format(i, '  '.join(row)))
 

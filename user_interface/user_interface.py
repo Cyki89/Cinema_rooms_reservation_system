@@ -4,37 +4,21 @@ import inspect
 
 from helpers import *
 
-previous_interface_methods = {
-    'show_interface': 'show_interface(curr_object)',
-    'show_actions': 'show_interface(curr_object.cinema)',
-    'make_reservation_interface': 'show_seating_plan(curr_object)',
-    'change_reservation_interface': 'show_seating_plan(curr_object)',
-    'refuse_reservation_interface': 'show_seating_plan(curr_object)'
-}
 
-def exit_go_back(user_input, curr_method, curr_object):
+def exit_go_back(user_input, curr_method):
     '''Method use to exit from aplication or go back to previous screen'''
     if user_input.upper() == 'X':
         exit()
-    # TODO How to close old method when we go back?
-    elif user_input.upper() == 'B':
-        return exec(previous_interface_methods[curr_method])
-    else:
-        return user_input
+    if user_input.upper() == 'B':
+        return interface_methods[curr_method][1]
+    return user_input
 
 
-def parse_user_input(curr_method, curr_object):
+def parse_user_input(curr_method):
     '''Method use to interprete user input'''
-    print_statement = {
-        'show_interface': 'Select a movie_id or press "x" to exit',
-        'show_actions': 'Select an action, press "x" to exit or press "b" go back',
-        'make_reservation_interface': 'Enter a full name to make reservation, press "x" to exit or press "b" go back',
-        'change_reservation_interface': 'Enter "x" to exit, press "b" to go back or press any other key to continue...',
-        'refuse_reservation_interface': 'Enter "x" to exit, press "b" to go back or press any other key to continue...'
-    }
-    print(f'{print_statement[curr_method]}')
+    print(f'{interface_methods[curr_method][0]}')
     user_input = input()
-    return exit_go_back(user_input, curr_method, curr_object)
+    return exit_go_back(user_input, curr_method)
 
 
 def handling_exception(e, curr_method, curr_object):
@@ -44,7 +28,8 @@ def handling_exception(e, curr_method, curr_object):
     print(f'Details: {e}')
     print('Try again')
     time.sleep(3)
-    return exec(previous_interface_methods[curr_method])
+    func = interface_methods[curr_method][1]
+    return func(curr_object)
 
 
 def select_seat(target = 'to'):
@@ -66,7 +51,9 @@ def show_interface(cinema):
     print(f'Welceome to {cinema.name} Cinema')
     cinema.show_schedule()
     curr_method = inspect.stack()[0][3]
-    user_input = parse_user_input(curr_method, cinema)
+    user_input = parse_user_input(curr_method)
+    if callable(user_input):
+        return user_input(cinema)
     try:
         selected_movie = cinema.select_movie(user_input)
         show_seating_plan(selected_movie)
@@ -94,7 +81,9 @@ def show_actions(movie):
         if action is not None:
             print(f'{i}. {action}')
     curr_method = inspect.stack()[0][3]
-    user_input = parse_user_input(curr_method, movie)
+    user_input = parse_user_input(curr_method)
+    if callable(user_input):
+        return user_input(movie.cinema)
     try:
         movie.select_action(user_input)
     except Exception as e:
@@ -104,7 +93,9 @@ def show_actions(movie):
 def make_reservation_interface(movie):
     '''Method redirects to room.allocate_seat method'''
     curr_method = inspect.stack()[0][3]
-    user_input = parse_user_input(curr_method, movie)
+    user_input = parse_user_input(curr_method)
+    if callable(user_input):
+        return user_input(movie)
     to_row, to_col = select_seat('to')
     try:
         movie.room.allocate_seat(user_input, to_row, to_col)
@@ -116,7 +107,9 @@ def make_reservation_interface(movie):
 def change_reservation_interface(movie):
     '''Method redirects to room.relocate_seat method'''
     curr_method = inspect.stack()[0][3]
-    user_input = parse_user_input(curr_method, movie)
+    user_input = parse_user_input(curr_method)
+    if callable(user_input):
+        return user_input(movie)
     from_row, from_col = select_seat('from')
     to_row, to_col = select_seat('to')
     try:
@@ -129,10 +122,20 @@ def change_reservation_interface(movie):
 def refuse_reservation_interface(movie):
     '''Method redirects to room.release_seat method'''
     curr_method = inspect.stack()[0][3]
-    user_input = parse_user_input(curr_method, movie)
+    user_input = parse_user_input(curr_method)
+    if callable(user_input):
+        return user_input(movie)
     from_row, from_col = select_seat('from')
     try:
         movie.room.release_seat(from_row, from_col)
     except Exception as e:
         handling_exception(e, curr_method, movie)
 
+
+interface_methods = {
+    'show_interface': ('Select a movie_id press "b" to refresh screen or press "x" to exit', show_interface),
+    'show_actions': ('Select an action, press "x" to exit or press "b" go back', show_interface),
+    'make_reservation_interface': ('Enter a full name to make reservation, press "x" to exit or press "b" go back', show_seating_plan),
+    'change_reservation_interface': ('Enter "x" to exit, press "b" to go back or press any other key to continue...', show_seating_plan),
+    'refuse_reservation_interface': ('Enter "x" to exit, press "b" to go back or press any other key to continue...', show_seating_plan)
+}
