@@ -1,4 +1,4 @@
-from user_interface import *
+import user_interface
 from helpers import *
 
 class Movie:
@@ -17,6 +17,6 @@ class Movie:
         except ValueError as e:
             raise ValueError(e)
         if int_user_input in range(1, len(self.list_of_action)):
-            exec(f'{self.list_of_action[int_user_input]}_interface(self)')
+            return exec(f'user_interface.{self.list_of_action[int_user_input]}_interface(self)')
         else:
             raise Exception(f'Action number {int_user_input} not found...')

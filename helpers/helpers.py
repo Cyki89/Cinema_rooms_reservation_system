@@ -22,7 +22,7 @@ def try_except_decorator(func):
     # print(f'Adding try_except_decorator to {func.__name__}')
     def wrapper(*args, **kwargs):
         try:
-            func(*args, **kwargs)
+            return func(*args, **kwargs)
         except Exception as e:
             raise Exception(e)
     return wrapper
