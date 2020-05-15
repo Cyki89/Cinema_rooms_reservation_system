@@ -1,23 +1,24 @@
 import os
 import time
 import inspect
-
+import sys
 from helpers import *
 
 
 def exit_go_back(user_input, curr_method):
     '''Method use to exit from aplication or go back to previous screen'''
     if user_input.upper() == 'X':
-        exit()
+        sys.exit()
     if user_input.upper() == 'B':
         return interface_methods[curr_method][1]
     return user_input
 
 
-def parse_user_input(curr_method):
+def parse_user_input(curr_method, user_input=None):
     '''Method use to interprete user input'''
     print(f'{interface_methods[curr_method][0]}')
-    user_input = input()
+    if user_input == None:
+        user_input = input()
     return exit_go_back(user_input, curr_method)
 
 
@@ -29,7 +30,10 @@ def handling_exception(e, curr_method, curr_object):
     print('Try again')
     time.sleep(3)
     func = interface_methods[curr_method][1]
-    return func(curr_object)
+    if func.__name__ == 'show_interface':
+        return show_interface(curr_object)
+    else:
+        return show_seating_plan(curr_object)
 
 
 def select_seat(target = 'to'):
@@ -52,18 +56,25 @@ def show_interface(cinema):
     cinema.show_schedule()
     curr_method = inspect.stack()[0][3]
     user_input = parse_user_input(curr_method)
+    print(user_input)
     if callable(user_input):
         return user_input(cinema)
     try:
         selected_movie = cinema.select_movie(user_input)
         show_seating_plan(selected_movie)
     except Exception as e:
-        handling_exception(e, curr_method, cinema)
+        print('excpet block')
+        return handling_exception(e, curr_method, cinema)
     else:
-        print('Back to Main Menu')
-        time.sleep(3)
-        os.system('clear')
-        show_interface(cinema)
+        return back_to_main_menu(cinema)
+
+
+def back_to_main_menu(cinema):
+    ''' function return user screen to main_menu '''
+    print('Back to Main Menu')
+    time.sleep(3)
+    os.system('clear')
+    return show_interface(cinema)
 
 
 def show_seating_plan(movie):
@@ -114,7 +125,8 @@ def change_reservation_interface(movie):
     to_row, to_col = select_seat('to')
     try:
         movie.room.relocate_seat(from_row, from_col, to_row, to_col)
-        ticket_printer(movie.cinema.name, movie.name, movie.time, movie.room.name, movie.room._Room__seating[int(to_row)][int(to_col)], to_row, to_col)
+        ticket_printer(movie.cinema.name, movie.name, movie.time, movie.room.name,
+                       movie.room._Room__seating[int(to_row)][int(to_col)], to_row, to_col)
     except Exception as e:
         handling_exception(e, curr_method, movie)
 

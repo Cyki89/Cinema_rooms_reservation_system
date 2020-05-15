@@ -20,7 +20,7 @@ class Cinema:
             if int_row <= 0 or int_col <= 0:
                 raise Exception(f'Both dimentions have to be grater than 0.\nRows: {int_row} Cols: {int_col}.')
         except Exception as e:
-            print(f'Unsuccessfully added a new room {name} with size: {size} to {self.name} cinema. Details:\n{e}')
+            raise Exception(f'Unsuccessfully added a new room {name} with size: {size} to {self.name} cinema. Details:\n{e}')
         else:
             self.list_of_rooms.append(Room(name, (int_row, int_col)))
             print(f'Successfully added a new room {name} with size: {size} to {self.name} cinema')
@@ -28,7 +28,7 @@ class Cinema:
     def add_movie(self, name, time, room):
         '''Method added new movie to cinema'''
         if name in self.movie_database.list_of_movies and time in self.showing_time and room in self.list_of_rooms:
-            self.list_of_movies.append(Movie(self, name, time, room))
+            self.list_of_movies.append(Movie(self, name, room, time))
         else:
             print(f'Movie {name} {room} {time} cannot be added to Cinema {self.name}')
             print('It dosent meet the cinema requirements')
